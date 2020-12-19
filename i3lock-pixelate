@@ -1,0 +1,90 @@
+#!/bin/bash -x
+
+function printhelp {
+cat <<- EOF
+i3lock-pixelate
+Based on i3lockmore by Sven Greiner <sven@sammyshp.de>
+
+This is a wrapper for i3lock, compatible with i3lock-color-git, that adds
+additional functionality (and some bugfixes to i3lockmore):
+
+    --pixelate [scalefactor]
+        Uses the pixelated screen content as the background of the lockscreen.
+
+        The optional value "scalefactor" controls the size of the pixels. A value
+        of 1 results in large pixels while a value of 100 has no effect.
+        (It scales down the background to "scalefactor" percent of the original
+        screen content).
+
+    --grayscale
+        Convert the background into grayscale. Requires --pixelate.
+        
+    --default
+        Use the default settings
+
+All other arguments are passed to i3lock.
+EOF
+}
+
+
+USE_PIXELATE=false
+PIXELATE_SCALEFACTOR=4
+declare -a PARAMS
+BACKGROUND=
+GRAYSCALE=
+
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --pixelate)
+            USE_PIXELATE=true
+            if [[ $# -gt 1 && "$2" =~ ^[0-9]+(\.[0-9]+)?$ ]]; then
+                PIXELATE_SCALEFACTOR="$2"
+                shift
+            fi
+            ;;
+
+        --grayscale)
+            GRAYSCALE="-colorspace gray"
+            ;;
+
+        --morehelp)
+            printhelp
+            exit
+            ;;
+            
+        --default)
+            USE_PIXELATE=true
+            GRAYSCALE="-colorspace gray"
+            PARAMS=(--insidevercolor=ffffffcc --insidewrongcolor=ff8000cc --insidecolor=ffffffcc --ringvercolor=ccccccff --ringwrongcolor=ff8000ff --ringcolor=ccccccff --textcolor=222222ff --separatorcolor=ccccccff --keyhlcolor=888888ff --bshlcolor=888888ff -r -k -f)
+            ;;
+
+        *)
+            # Pass argument to i3lock
+            PARAMS+=( "$1" )
+            ;;
+    esac
+
+    shift # Consume argument
+done
+
+function finish {
+    if [[ "$USE_PIXELATE" == true ]]; then
+        if [[ "$BACKGROUND" =~ ^/tmp/i3lock-pixelate-background\.[a-zA-Z0-9]+$ ]]; then
+            rm "$BACKGROUND"
+        fi
+    fi
+}
+trap finish EXIT
+
+
+if [[ "$USE_PIXELATE" == true ]]; then
+    BACKGROUND=$(mktemp /tmp/i3lock-pixelate-background.XXXXX)
+    import -window root jpeg:"$BACKGROUND"
+    SIZE=$(identify -format "%[fx:w]x%[fx:h]" "$BACKGROUND")
+    convert jpeg:"$BACKGROUND" -scale $PIXELATE_SCALEFACTOR% $GRAYSCALE -sample $SIZE\! -quality 11 png24:"$BACKGROUND"
+
+    PARAMS+=( --image="$BACKGROUND" )
+fi
+
+i3lock "${PARAMS[@]}"
