@@ -254,11 +254,11 @@ exec indicator-cpufreq
 
 bindsym $mod+Control+s exec gnome-screenshot -i
 
-bindsym $mod+Control+1 exec switch_monitor 7
-bindsym $mod+Control+2 exec switch_monitor 5
-bindsym $mod+Control+3 exec switch_monitor 3
-
+bindsym $mod+Control+1 exec switch_monitor 1
+bindsym $mod+Control+2 exec switch_monitor 3
 
 for_window [title="JidePopup"] floating enable
 
 for_window [class="Vivado" instance="Vivado" title="win0"] floating enable
+
+for_window [instance="origin.exe" title="Origin"] floating enable
