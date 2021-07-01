@@ -4,5 +4,5 @@
 
 sleep 2
 
-systemctl hibernate
-#systemctl suspend
+#systemctl hibernate
+systemctl suspend

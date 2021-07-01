@@ -122,6 +122,7 @@ bindsym $mod+Shift+9 move container to workspace 9
 bindsym $mod+Shift+0 move container to workspace 10
 
 bindsym $mod+l exec ~/.config/i3/i3lock-hibernate
+#bindsym $mod+l exec ~/.config/i3/i3lock-pixelate --pixelate 8 -f
 
 # Pulse Audio controls
 bindsym XF86AudioRaiseVolume exec "pactl set-sink-volume  @DEFAULT_SINK@ +2% ; pkill -RTMIN+10 i3blocks"
@@ -143,6 +144,8 @@ bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+
+bindsym $mod+Shift+s sticky toggle
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -225,7 +228,7 @@ bar {
 }
 
 # My colors
-client.focused		$yellow	$blue		$grey		$grey		#443309
+#client.focused		$yellow	$blue		$grey		$grey		#443309
 #client.focused_inactive	$yellow		$blue		$grey		$yellow		$yellow
 #client.unfocused	$yellow		$blue		$grey		$yellow		$yellow
 #client.urgent		$yellow		$blue		$yellow		$yellow		$yellow
@@ -251,14 +254,27 @@ exec nm-applet
 exec solaar
 exec indicator-cpufreq
 #exec xset dpms 0 0 600
+exec xset m 1 4
+exec xautolock -time 15 -locker '~/.config/i3/i3lock-pixelate --pixelate 8 -f' &
+exec xrdb $HOME/.Xresources
 
-bindsym $mod+Control+s exec gnome-screenshot -i
+#bindsym $mod+Control+s exec gnome-screenshot -i
+bindsym $mod+Control+s exec --no-startup-id maim --select | xclip -selection clipboard -t image/png
 
-bindsym $mod+Control+1 exec switch_monitor 1
-bindsym $mod+Control+2 exec switch_monitor 3
+
+#bindsym $mod+Control+2 exec switch_monitor 3
+bindsym $mod+Control+1 exec desk_only
+bindsym $mod+Control+2 exec tv_only
 
 for_window [title="JidePopup"] floating enable
 
 for_window [class="Vivado" instance="Vivado" title="win0"] floating enable
+for_window [class="Vivado" instance="Vivado" title=" Starting Design Runs "] floating enable
+for_window [class="Vivado" instance="Vivado" title=" Set Up Debug "] floating enable
 
 for_window [instance="origin.exe" title="Origin"] floating enable
+for_window [instance="steam_app_1182480" title="Origin"] floating enable
+
+for_window [class="com-xilinx-installer-api-InstallerLauncher"] floating enable
+#for_window [title="Origin"] floating enable
+
