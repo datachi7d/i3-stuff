@@ -130,9 +130,15 @@ bindsym XF86AudioLowerVolume exec "pactl set-sink-volume  @DEFAULT_SINK@ -2% ; p
 bindsym XF86AudioMute exec "pactl set-sink-mute  @DEFAULT_SINK@ toggle ; pkill -RTMIN+10 i3blocks"
 
 # Spotify Audio Controls
-bindsym XF86AudioPlay exec "spotify_control playpause"
-bindsym XF86AudioNext exec "spotify_control next"
-bindsym XF86AudioPrev exec "spotify_control previous"
+#bindsym XF86AudioPlay exec "spotify_control playpause"
+#bindsym XF86AudioNext exec "spotify_control next"
+#bindsym XF86AudioPrev exec "spotify_control previous"
+
+#
+bindsym XF86AudioPlay exec "playerctl play-pause"
+bindsym XF86AudioNext exec "playerctl next"
+bindsym XF86AudioPrev exec "playerctl previous"
+
 
 #Brightness control
 bindsym XF86MonBrightnessUp exec xbacklight -inc 20 # increase screen brightness
