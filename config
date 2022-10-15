@@ -266,7 +266,7 @@ exec solaar
 exec indicator-cpufreq
 #exec xset dpms 0 0 600
 exec xset m 1 4
-exec xautolock -time 15 -locker '~/.config/i3/i3lock-pixelate --pixelate 8 -f' &
+exec xautolock -time 30 -locker '~/.config/i3/i3lock-pixelate --pixelate 8 -f' &
 exec xrdb $HOME/.Xresources
 
 #bindsym $mod+Control+s exec gnome-screenshot -i
